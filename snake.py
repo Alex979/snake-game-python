@@ -145,6 +145,7 @@ class Snake:
 BACKGROUND_COLOR = 1, 23, 47
 WINDOW_SIZE = 648, 648
 
+# Initalize pygame, screen, and clock
 pygame.init()
 
 screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -152,9 +153,19 @@ pygame.display.set_caption("Snake")
 
 clock = pygame.time.Clock()
 
+# Setup grid and snake
 grid = Grid(screen, 36, 36, 18)
 snake = Snake(grid)
 snake.new_apple()
+
+# Speed growth model (logistic-growth)
+inital_speed = 10
+speed_cap = 20
+rate = 0.1
+def get_speed(x):
+    a = (inital_speed**-1) * speed_cap - 1
+    return speed_cap/(1 + a * math.e**(-rate * x))
+
 
 while True:
     for event in pygame.event.get():
@@ -177,4 +188,4 @@ while True:
 
     pygame.display.flip()
 
-    clock.tick(10)
+    clock.tick(get_speed(Snake.score))
